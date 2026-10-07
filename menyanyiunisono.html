@@ -327,7 +327,6 @@
       { name: "NANA", icon: "🐱", quote: "BISA YUK!" }
     ];
 
-    // 5 BANK SOAL BARU BERDASARKAN GAMBAR INFOGRAFIS PANDUAN UNISONO
     var selectedQuestions = [
       { 
         q: "1. Pengertian Menyanyi Unisono:\nApa yang dimaksud dengan bernyanyi secara Unisono berdasarkan panduan?", 
@@ -549,7 +548,6 @@
       renderGridTiles();
     }
 
-    /* DIKUNCI HANYA 5 UBIN INTERAKTIF */
     function renderGridTiles() {
       var gridContainer = document.getElementById("tiles-container");
       gridContainer.innerHTML = "";
@@ -682,31 +680,37 @@
     }
 
     function updateOverallProgress() {
-      var calculatedScore = correctAnswersCount * 20; // SKOR MULTIPLIER 20 PER SOAL (TOTAL 100)
+      var calculatedScore = correctAnswersCount * 20;
       document.getElementById("q-counter").innerText = `Terjawab: ${answeredCount} / 5 Soal`;
       document.getElementById("score-badge").innerText = "SKOR: " + calculatedScore;
       document.getElementById("finish-btn").style.display = "inline-block";
     }
 
+    // FUNGSI PENGIRIMAN DATA FORM LAMA (BEBAS BLOKIR CORS)
     function sendDataToGoogleSheets() {
       var finalScore = correctAnswersCount * 20;
-      var payload = {
-        timestamp: new Date().toLocaleString("id-ID"),
-        nama: studentName,
-        kelas: studentClass,
-        benar: correctAnswersCount,
-        totalSoal: 5,
-        skor: finalScore,
-        pelanggaran: cheatCount
-      };
+      
+      // Menggunakan URLSearchParams agar terbaca sebagai Form Data oleh Google Apps Script
+      var formData = new URLSearchParams();
+      formData.append("timestamp", new Date().toLocaleString("id-ID"));
+      formData.append("nama", studentName);
+      formData.append("kelas", studentClass);
+      formData.append("benar", correctAnswersCount);
+      formData.append("totalSoal", 5);
+      formData.append("skor", finalScore);
+      formData.append("pelanggaran", cheatCount);
 
       if (SCRIPT_URL && SCRIPT_URL.indexOf("AKfycb") !== -1) {
         fetch(SCRIPT_URL, {
           method: "POST",
           mode: "no-cors",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(payload)
-        }).catch(function(err) { console.error("Gagal mengirim data:", err); });
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+          body: formData.toString()
+        }).then(function() {
+          console.log("Data berhasil terkirim ke Google Sheets.");
+        }).catch(function(err) { 
+          console.error("Gagal mengirim data:", err); 
+        });
       }
     }
 
@@ -721,23 +725,4 @@
         playNaturalVoice("Tetap semangat ya! Ayo pelajari lagi panduan teknik dasar menyanyi unisono!");
       }
 
-      document.body.innerHTML = `
-        <div style="min-height:100vh; display:flex; flex-direction:column; justify-content:center; align-items:center; background:#0f0c1b; color:#fff; text-align:center; padding:20px;">
-          <h1 style="color:#ffe600; font-size:30px; margin-bottom:15px; text-transform:uppercase; text-shadow:0 0 10px #ffe600;">GAME OVER! 🏆</h1>
-          <p style="color:#00f0ff; font-size:15px; margin-bottom:20px;">Data nilai kuis telah berhasil terdata di sistem Google Sheets.</p>
-          <div style="background:#1a162b; border:3px solid #ff007f; padding:20px; border-radius:20px; width:100%; max-width:350px; margin-bottom:20px; text-align:left; box-shadow:0 0 20px rgba(255,0,127,0.3);">
-            <p style="font-size:15px; margin-bottom:8px; color:#00f0ff;">Nama: <strong>${studentName}</strong></p>
-            <p style="font-size:15px; margin-bottom:15px; color:#00f0ff;">Kelas: <strong>${studentClass}</strong></p>
-            <hr style="border:0; border-top:1px solid #7928ca; margin-bottom:15px;">
-            <p style="font-size:16px; margin-bottom:10px;">Soal Terjawab: <strong>${answeredCount} / 5 Soal</strong></p>
-            <p style="font-size:16px; margin-bottom:10px;">Jawaban Benar: <strong style="color:#10b981;">${correctAnswersCount} Soal</strong></p>
-            <p style="font-size:16px; margin-bottom:10px;">Pelanggaran Curang: <strong style="color:${cheatCount > 0 ? '#ef4444' : '#10b981'};">${cheatCount} Kali</strong></p>
-            <p style="font-size:26px; font-weight:900; color:#ffe600; margin-top:10px; text-shadow:0 0 10px #ffe600;">NILAI AKHIR: ${finalScore}</p>
-          </div>
-          <button onclick="location.reload()" style="background:linear-gradient(135deg, #00f0ff, #7928ca); color:#fff; font-size:18px; font-weight:bold; padding:14px 35px; border:2px solid #fff; border-radius:30px; cursor:pointer; box-shadow:0 0 15px rgba(0,240,255,0.5);">MAIN LAGI 🔄</button>
-        </div>
-      `;
-    }
-  </script>
-</body>
-</html>
+      document
