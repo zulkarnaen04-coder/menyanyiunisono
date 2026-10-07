@@ -6,7 +6,7 @@
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
   <meta http-equiv="Pragma" content="no-cache" />
   <meta http-equiv="Expires" content="0" />
-  <title>KUIS MENYANYI UNISONO KELAS 7 - MLBB EDITION</title>
+  <title>KUIS MUSIK KELAS 7 - MLBB EDITION</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; user-select: none; -webkit-user-select: none; }
     body { background: #0f0c1b; color: #ffffff; min-height: 100vh; display: flex; flex-direction: column; padding: 10px; overflow-x: hidden; }
@@ -24,7 +24,7 @@
     .q-counter { font-size: 16px; font-weight: bold; color: #ffe600; }
     .score-badge { background: linear-gradient(135deg, #00f0ff, #ff007f); padding: 8px 18px; border-radius: 20px; font-size: 18px; font-weight: 900; color: #fff; text-shadow: 1px 1px 2px #000; box-shadow: 0 4px 10px rgba(0,0,0,0.5); }
 
-    /* Layout Ubin 3D Game */
+    /* Layout Ubin 3D Game (PAS 10 UBIN) */
     .tiles-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(75px, 1fr)); gap: 15px; padding: 20px; background: #151221; border: 3px solid #7928ca; border-radius: 20px; flex-grow: 1; max-height: calc(100vh - 180px); overflow-y: auto; box-shadow: inset 0 0 20px rgba(0,0,0,0.8); }
     
     .tile-btn { 
@@ -99,6 +99,8 @@
 
     /* Pertanyaan & Opsi Jawaban 3D */
     .question-box { background: #0f0c1b; border: 2px solid #ffe600; padding: 15px; border-radius: 12px; font-size: 16px; font-weight: bold; line-height: 1.4; text-align: center; min-height: 80px; display: flex; flex-direction: column; align-items: center; justify-content: center; color: #ffe600; margin-bottom: 15px; box-shadow: inset 0 0 10px rgba(255, 230, 0, 0.2); }
+    .audio-btn { background: linear-gradient(135deg, #ff007f, #7928ca); color: #fff; border: 2px solid #fff; border-bottom: 4px solid #4a1580; padding: 10px 20px; font-size: 15px; font-weight: bold; border-radius: 20px; cursor: pointer; margin-top: 12px; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.5); }
+    .audio-btn:active { transform: translateY(2px); }
 
     .options-grid { display: flex; flex-direction: column; gap: 12px; }
     .opt-btn { 
@@ -232,7 +234,7 @@
   <!-- Screen Awal / Start Game Trending -->
   <div class="start-screen" id="start-screen">
     <div class="start-title">ZULKARNAEN</div>
-    <div class="start-subtitle">🎵 KUIS MENYANYI UNISONO KELAS 7 🎵</div>
+    <div class="start-subtitle">🎵 KUIS MUSIK & EAR TRAINING KELAS 7 🎵</div>
     
     <div class="student-form">
       <div class="form-group">
@@ -246,10 +248,11 @@
     </div>
 
     <div class="rule-box">
-      <strong style="color:#ffe600; display:block; margin-bottom:6px; text-transform:uppercase;">ATURAN KUIS TEKNIK UNISONO:</strong>
+      <strong style="color:#ffe600; display:block; margin-bottom:6px; text-transform:uppercase;">ATURAN KUIS (10 SOAL):</strong>
       <ul>
-        <li>🎤 <strong>5 Soal Utama:</strong> Soal disusun berdasarkan Panduan Teknik Dasar Menyanyi Unisono.</li>
-        <li>💯 <strong>Sistem Skor:</strong> Tiap soal bernilai 20 poin (Total Maksimal = 100 Poin).</li>
+        <li>📖 <strong>Soal 1-5:</strong> Teori Panduan Teknik Dasar Menyanyi Unisono.</li>
+        <li>🎧 <strong>Soal 6-10:</strong> Ear Training (Dengarkan Do-Re-Mi, jeda 3 detik, lalu tebak nada!).</li>
+        <li>💯 <strong>Sistem Skor:</strong> Tiap soal bernilai 10 poin (Total Maksimal = 100 Poin).</li>
         <li>⏱️ <strong>Waktu Soal:</strong> 1 Menit (60 Detik) per soal.</li>
         <li>🚫 <strong>Anti-Curang:</strong> Dilarang pindah tab/aplikasi saat kuis berlangsung.</li>
       </ul>
@@ -261,12 +264,12 @@
   <div class="header">
     <div class="student-info" id="display-student-info">Siswa: - | Kelas: -</div>
     <div class="top-info">
-      <div class="q-counter" id="q-counter">Terjawab: 0 / 5 Soal</div>
+      <div class="q-counter" id="q-counter">Terjawab: 0 / 10 Soal</div>
       <div class="score-badge" id="score-badge">SKOR: 0</div>
     </div>
   </div>
 
-  <!-- Grid Ubin Soal 3D (PAS CUMA 5 SOAL) -->
+  <!-- Grid Ubin Soal 3D (PAS CUMA 10 SOAL) -->
   <div class="tiles-container" id="tiles-container"></div>
 
   <!-- Tombol Selesai Kuis -->
@@ -278,7 +281,7 @@
   <div class="modal-overlay" id="modal-overlay">
     <div class="modal-card">
       <div class="modal-header">
-        <div class="modal-title">Soal Menyanyi Unisono</div>
+        <div class="modal-title" id="modal-title">Soal Musik</div>
         <button class="close-modal-btn" onclick="closeModalDirectly()">✕ Batal</button>
       </div>
 
@@ -289,6 +292,9 @@
 
       <div class="question-box" id="question-box">
         <span id="question-text">Memuat soal...</span>
+        <button id="audio-play-btn" class="audio-btn" style="display:none;" onclick="playQuestionSound()">
+          🔊 Putar Ulang Audio (Do-Re-Mi ... 3 Detik ... Nada Tebakan)
+        </button>
       </div>
 
       <div class="options-grid" id="options-grid"></div>
@@ -311,6 +317,8 @@
     let audioCtx = null;
     let currentVoiceAudio = null;
 
+    const FREQ = { C4: 261.63, D4: 293.66, E4: 329.63 };
+
     const correctHeroes = [
       { name: "ALUCARD", icon: "⚔️", quote: "MANTAP!" },
       { name: "MIYA", icon: "🏹", quote: "FOKUS!" },
@@ -327,6 +335,7 @@
       { name: "NANA", icon: "🐱", quote: "BISA YUK!" }
     ];
 
+    // 10 SOAL KUIS (5 SOAL TEORI UNISONO + 5 SOAL EAR TRAINING DO-RE-MI PAUSE 3 DETIK)
     var selectedQuestions = [
       { 
         q: "1. Pengertian Menyanyi Unisono:\nApa yang dimaksud dengan bernyanyi secara Unisono berdasarkan panduan?", 
@@ -336,7 +345,8 @@
           "Bernyanyi solo dengan diiringi musik piano", 
           "Bernyanyi kanon secara bersahut-sahutan"
         ], 
-        correctText: "Bernyanyi bersama menyanyikan SATU jalur melodi yang sama secara berkelompok" 
+        correctText: "Bernyanyi bersama menyanyikan SATU jalur melodi yang sama secara berkelompok",
+        isAudio: false
       },
       { 
         q: "2. Teknik Dasar Vokal (Pernapasan):\nJenis pernapasan apakah yang direkomendasikan agar pernapasan lebih optimal, bertenaga, dan stabil saat bernyanyi?", 
@@ -346,7 +356,8 @@
           "Pernapasan Bahu", 
           "Pernapasan Hidung"
         ], 
-        correctText: "Pernapasan Perut / Diafragma" 
+        correctText: "Pernapasan Perut / Diafragma",
+        isAudio: false 
       },
       { 
         q: "3. Teknik Dasar Vokal (Artikulasi & Ketepatan Nada):\nBagaimana cara menjaga pengucapan dan ketepatan nada agar suara tidak sumbang saat unisono?", 
@@ -356,7 +367,8 @@
           "Mengucapkan kata secara samar-samar agar vokal terdengar lembut", 
           "Menyanyikan nada lebih tinggi satu oktaf dari kelompok"
         ], 
-        correctText: "Pengucapan vokal (A, I, U, E, O) harus terang, konsonan tajam, serta mendengarkan rekan untuk menyesuaikan tinggi rendah suara" 
+        correctText: "Pengucapan vokal (A, I, U, E, O) harus terang, konsonan tajam, serta mendengarkan rekan untuk menyesuaikan tinggi rendah suara",
+        isAudio: false 
       },
       { 
         q: "4. Kunci Keberhasilan Unisono:\nSebutkan 3 kunci utama keberhasilan dalam menyanyi unisono menurut panduan!", 
@@ -366,7 +378,8 @@
           "Pembagian Suara, Harmoni Kompleks, dan Gaya Panggung", 
           "Ekspresi Wajah, Pakaian Seragam, dan Penggunaan Mikrofon"
         ], 
-        correctText: "Mendengarkan (Listening), Keseimbangan Volume, dan Kekompakan Tempo" 
+        correctText: "Mendengarkan (Listening), Keseimbangan Volume, dan Kekompakan Tempo",
+        isAudio: false 
       },
       { 
         q: "5. Manfaat Bernyanyi Unisono:\nDi bawah ini yang BUKAN merupakan manfaat dari bernyanyi unisono berdasarkan infografis adalah...", 
@@ -376,7 +389,45 @@
           "Meningkatkan kepercayaan diri", 
           "Melatih keterampilan musik dan kegembiraan bersama"
         ], 
-        correctText: "Menimbulkan persaingan antar penyanyi solo" 
+        correctText: "Menimbulkan persaingan antar penyanyi solo",
+        isAudio: false 
+      },
+
+      /* 5 SOAL EAR TRAINING BARU (DO - RE - MI, DIAM 3 DETIK, BUNYI NADA TEBAKAN) */
+      {
+        q: "6. Ear Training 1:\nDengarkan nada patokan Do-Re-Mi, lalu diam 3 detik. Nada apakah yang berbunyi setelah jeda 3 detik tersebut?",
+        options: ["Nada Do (C)", "Nada Re (D)", "Nada Mi (E)"],
+        correctText: "Nada Do (C)",
+        isAudio: true,
+        targetFreq: FREQ.C4
+      },
+      {
+        q: "7. Ear Training 2:\nDengarkan nada patokan Do-Re-Mi, lalu diam 3 detik. Nada apakah yang berbunyi setelah jeda 3 detik tersebut?",
+        options: ["Nada Do (C)", "Nada Re (D)", "Nada Mi (E)"],
+        correctText: "Nada Re (D)",
+        isAudio: true,
+        targetFreq: FREQ.D4
+      },
+      {
+        q: "8. Ear Training 3:\nDengarkan nada patokan Do-Re-Mi, lalu diam 3 detik. Nada apakah yang berbunyi setelah jeda 3 detik tersebut?",
+        options: ["Nada Do (C)", "Nada Re (D)", "Nada Mi (E)"],
+        correctText: "Nada Mi (E)",
+        isAudio: true,
+        targetFreq: FREQ.E4
+      },
+      {
+        q: "9. Ear Training 4:\nDengarkan nada patokan Do-Re-Mi, lalu diam 3 detik. Tebaklah nada tunggal yang dibunyikan di akhir!",
+        options: ["Nada Do (C)", "Nada Re (D)", "Nada Mi (E)"],
+        correctText: "Nada Do (C)",
+        isAudio: true,
+        targetFreq: FREQ.C4
+      },
+      {
+        q: "10. Ear Training 5:\nDengarkan nada patokan Do-Re-Mi, lalu diam 3 detik. Tebaklah nada tunggal yang dibunyikan di akhir!",
+        options: ["Nada Do (C)", "Nada Re (D)", "Nada Mi (E)"],
+        correctText: "Nada Mi (E)",
+        isAudio: true,
+        targetFreq: FREQ.E4
       }
     ];
 
@@ -391,7 +442,7 @@
     var cheatCount = 0;
     var MAX_CHEATS = 3;
     var isAnswered = false;
-    var userAnswers = new Array(5).fill(null);
+    var userAnswers = new Array(10).fill(null);
 
     function initAudioContext() {
       if (!audioCtx) {
@@ -401,7 +452,6 @@
       if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
     }
 
-    /* PENGAMANDAN SUARA TTS TANPA STUCK GAMING */
     function playNaturalVoice(text, onEndCallback) {
       if (currentVoiceAudio) {
         currentVoiceAudio.pause();
@@ -421,6 +471,39 @@
       } catch (e) {
         if (onEndCallback) onEndCallback();
       }
+    }
+
+    /* MEMAINKAN AUDIO DO-RE-MI -> DIAM 3 DETIK -> BUNYI NADA TEBAKAN */
+    function playEarTrainingPattern(targetFreq) {
+      initAudioContext();
+      if (!audioCtx) return;
+      const now = audioCtx.currentTime + 0.1;
+
+      // 1. Bunyikan Do - Re - Mi (masing-masing 0.6 detik)
+      playTone(0.5, now, 'sine', FREQ.C4);       // Do
+      playTone(0.5, now + 0.6, 'sine', FREQ.D4); // Re
+      playTone(0.5, now + 1.2, 'sine', FREQ.E4); // Mi
+
+      // 2. Jeda / Diam 3 Detik (Audio Hening dari 1.8 detik s/d 4.8 detik)
+      
+      // 3. Bunyikan Nada Tebakan setelah jeda 3 detik (pada detik ke-4.8)
+      playTone(1.2, now + 4.8, 'sine', targetFreq);
+    }
+
+    function playTone(dur, startTime, inst = 'sine', freq = 261.63) {
+      if (!audioCtx) return;
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+
+      osc.type = inst;
+      osc.frequency.setValueAtTime(freq, startTime);
+      gain.gain.setValueAtTime(0.3, startTime);
+      gain.gain.linearRampToValueAtTime(0.001, startTime + dur);
+
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start(startTime);
+      osc.stop(startTime + dur);
     }
 
     function showHeroBoost(isCorrect) {
@@ -484,7 +567,6 @@
       return arr;
     }
 
-    /* SISTEM START GAME SANGAT CEPAT BERJALAN */
     function validateAndStart() {
       var nameInput = document.getElementById("student-name").value.trim();
       var classInput = document.getElementById("student-class").value.trim();
@@ -497,10 +579,7 @@
       document.getElementById("display-student-info").innerText = "Siswa: " + studentName + " | Kelas: " + studentClass;
       initAudioContext();
       
-      // Langsung jalankan kuis tanpa tertahan audio!
       startQuiz();
-      
-      // Suara pembuka tetap dimainkan di background
       playNaturalVoice("Selamat datang di Zulkarnaen Kuis Musik SMP! Selamat bermain!");
     }
 
@@ -578,6 +657,15 @@
 
       var qData = selectedQuestions[currentQIndex];
       document.getElementById("question-text").innerText = qData.q;
+      document.getElementById("modal-title").innerText = qData.isAudio ? "Soal Ear Training" : "Soal Teori Unisono";
+
+      var audioBtn = document.getElementById("audio-play-btn");
+      if (qData.isAudio) {
+        audioBtn.style.display = "inline-flex";
+        playQuestionSound();
+      } else {
+        audioBtn.style.display = "none";
+      }
 
       var shuffledOptions = shuffleArray(qData.options);
       var grid = document.getElementById("options-grid");
@@ -593,6 +681,12 @@
 
       document.getElementById("modal-overlay").style.display = "flex";
       startTimer();
+    }
+
+    function playQuestionSound() {
+      if (currentQIndex !== -1 && selectedQuestions[currentQIndex].isAudio) {
+        playEarTrainingPattern(selectedQuestions[currentQIndex].targetFreq);
+      }
     }
 
     function closeModalDirectly() {
@@ -686,20 +780,20 @@
     }
 
     function updateOverallProgress() {
-      var calculatedScore = correctAnswersCount * 20;
-      document.getElementById("q-counter").innerText = `Terjawab: ${answeredCount} / 5 Soal`;
+      var calculatedScore = correctAnswersCount * 10; // SKOR 10 POIN PER SOAL (TOTAL 100)
+      document.getElementById("q-counter").innerText = `Terjawab: ${answeredCount} / 10 Soal`;
       document.getElementById("score-badge").innerText = "SKOR: " + calculatedScore;
       document.getElementById("finish-btn").style.display = "inline-block";
     }
 
     function sendDataToGoogleSheets() {
-      var finalScore = correctAnswersCount * 20;
+      var finalScore = correctAnswersCount * 10;
       var formData = new URLSearchParams();
       formData.append("timestamp", new Date().toLocaleString("id-ID"));
       formData.append("nama", studentName);
       formData.append("kelas", studentClass);
       formData.append("benar", correctAnswersCount);
-      formData.append("totalSoal", 5);
+      formData.append("totalSoal", 10);
       formData.append("skor", finalScore);
       formData.append("pelanggaran", cheatCount);
 
@@ -715,13 +809,13 @@
 
     function finishQuiz() {
       clearInterval(timerInterval);
-      var finalScore = correctAnswersCount * 20;
+      var finalScore = correctAnswersCount * 10;
       sendDataToGoogleSheets();
 
       if (finalScore >= 80) {
-        playNaturalVoice("Selamat! Pemahaman materi menyanyi unisono kamu sangat luar biasa!");
+        playNaturalVoice("Selamat! Pemahaman musik dan pendengaran nada kamu sangat luar biasa!");
       } else {
-        playNaturalVoice("Tetap semangat ya! Ayo pelajari lagi panduan teknik dasar menyanyi unisono!");
+        playNaturalVoice("Tetap semangat ya! Ayo latih lagi pendengaran nada dan materi musik kamu!");
       }
 
       document.body.innerHTML = `
@@ -732,7 +826,7 @@
             <p style="font-size:15px; margin-bottom:8px; color:#00f0ff;">Nama: <strong>${studentName}</strong></p>
             <p style="font-size:15px; margin-bottom:15px; color:#00f0ff;">Kelas: <strong>${studentClass}</strong></p>
             <hr style="border:0; border-top:1px solid #7928ca; margin-bottom:15px;">
-            <p style="font-size:16px; margin-bottom:10px;">Soal Terjawab: <strong>${answeredCount} / 5 Soal</strong></p>
+            <p style="font-size:16px; margin-bottom:10px;">Soal Terjawab: <strong>${answeredCount} / 10 Soal</strong></p>
             <p style="font-size:16px; margin-bottom:10px;">Jawaban Benar: <strong style="color:#10b981;">${correctAnswersCount} Soal</strong></p>
             <p style="font-size:16px; margin-bottom:10px;">Pelanggaran Curang: <strong style="color:${cheatCount > 0 ? '#ef4444' : '#10b981'};">${cheatCount} Kali</strong></p>
             <p style="font-size:26px; font-weight:900; color:#ffe600; margin-top:10px; text-shadow:0 0 10px #ffe600;">NILAI AKHIR: ${finalScore}</p>
