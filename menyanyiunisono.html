@@ -251,7 +251,7 @@
       <strong style="color:#ffe600; display:block; margin-bottom:6px; text-transform:uppercase;">ATURAN KUIS (10 SOAL):</strong>
       <ul>
         <li>📖 <strong>Soal 1-5:</strong> Teori Panduan Teknik Dasar Menyanyi Unisono.</li>
-        <li>🪈 <strong>Soal 6-10:</strong> Ear Training Flute (Dengarkan Do-Re-Mi, jeda 3 detik, lalu tebak nada!).</li>
+        <li>🪈 <strong>Soal 6-10:</strong> Ear Training Flute (Dengarkan Do-Re-Mi 2 ketuk, jeda 3 detik, lalu tebak nada!).</li>
         <li>💯 <strong>Sistem Skor:</strong> Tiap soal bernilai 10 poin (Total Maksimal = 100 Poin).</li>
         <li>⏱️ <strong>Waktu Soal:</strong> 2 Menit (120 Detik) per soal.</li>
         <li>🚫 <strong>Anti-Curang:</strong> Dilarang pindah tab/aplikasi saat kuis berlangsung.</li>
@@ -269,7 +269,7 @@
     </div>
   </div>
 
-  <!-- Grid Ubin Soal 3D (PAS CUMA 10 SOAL) -->
+  <!-- Grid Ubin Soal 3D -->
   <div class="tiles-container" id="tiles-container"></div>
 
   <!-- Tombol Selesai Kuis -->
@@ -317,7 +317,7 @@
     let audioCtx = null;
     let currentVoiceAudio = null;
 
-    // FREKUENSI NADA C5 (OKTAF TINGGI KHAS INSTRUMEN FLUTE)
+    // FREKUENSI NADA C5 (OKTAF TINGGI FLUTE)
     const FREQ = { C5: 523.25, D5: 587.33, E5: 659.25 };
 
     const correctHeroes = [
@@ -393,37 +393,37 @@
         isAudio: false 
       },
 
-      /* 5 SOAL EAR TRAINING DENGAN SUARA FLUTE */
+      /* 5 SOAL EAR TRAINING FLUTE (2 KETUK PER NADA) */
       {
-        q: "6. Ear Training Flute 1:\nDengarkan nada flute Do-Re-Mi, lalu diam 3 detik. Nada apakah yang berbunyi setelah jeda 3 detik tersebut?",
+        q: "6. Ear Training Flute 1:\nDengarkan nada flute Do-Re-Mi (2 ketuk), lalu diam 3 detik. Nada apakah yang berbunyi setelah jeda 3 detik tersebut?",
         options: ["Nada Do (C)", "Nada Re (D)", "Nada Mi (E)"],
         correctText: "Nada Do (C)",
         isAudio: true,
         targetFreq: FREQ.C5
       },
       {
-        q: "7. Ear Training Flute 2:\nDengarkan nada flute Do-Re-Mi, lalu diam 3 detik. Nada apakah yang berbunyi setelah jeda 3 detik tersebut?",
+        q: "7. Ear Training Flute 2:\nDengarkan nada flute Do-Re-Mi (2 ketuk), lalu diam 3 detik. Nada apakah yang berbunyi setelah jeda 3 detik tersebut?",
         options: ["Nada Do (C)", "Nada Re (D)", "Nada Mi (E)"],
         correctText: "Nada Re (D)",
         isAudio: true,
         targetFreq: FREQ.D5
       },
       {
-        q: "8. Ear Training Flute 3:\nDengarkan nada flute Do-Re-Mi, lalu diam 3 detik. Nada apakah yang berbunyi setelah jeda 3 detik tersebut?",
+        q: "8. Ear Training Flute 3:\nDengarkan nada flute Do-Re-Mi (2 ketuk), lalu diam 3 detik. Nada apakah yang berbunyi setelah jeda 3 detik tersebut?",
         options: ["Nada Do (C)", "Nada Re (D)", "Nada Mi (E)"],
         correctText: "Nada Mi (E)",
         isAudio: true,
         targetFreq: FREQ.E5
       },
       {
-        q: "9. Ear Training Flute 4:\nDengarkan nada flute Do-Re-Mi, lalu diam 3 detik. Tebaklah nada tunggal yang dibunyikan di akhir!",
+        q: "9. Ear Training Flute 4:\nDengarkan nada flute Do-Re-Mi (2 ketuk), lalu diam 3 detik. Tebaklah nada tunggal yang dibunyikan di akhir!",
         options: ["Nada Do (C)", "Nada Re (D)", "Nada Mi (E)"],
         correctText: "Nada Do (C)",
         isAudio: true,
         targetFreq: FREQ.C5
       },
       {
-        q: "10. Ear Training Flute 5:\nDengarkan nada flute Do-Re-Mi, lalu diam 3 detik. Tebaklah nada tunggal yang dibunyikan di akhir!",
+        q: "10. Ear Training Flute 5:\nDengarkan nada flute Do-Re-Mi (2 ketuk), lalu diam 3 detik. Tebaklah nada tunggal yang dibunyikan di akhir!",
         options: ["Nada Do (C)", "Nada Re (D)", "Nada Mi (E)"],
         correctText: "Nada Mi (E)",
         isAudio: true,
@@ -473,18 +473,18 @@
       }
     }
 
-    /* SINTESIS FLUTE (SINE WAVE + BREATH ENVELOPE + VIBRATO HARMONIK) */
+    /* SINTESIS FLUTE DENGAN DURASI TERTENTU (DENGAN ENVELOPE DAN VIBRATO) */
     function playFluteTone(dur, startTime, freq) {
       if (!audioCtx) return;
 
       const osc = audioCtx.createOscillator();
       const gain = audioCtx.createGain();
 
-      // Vibrato (Pembelokan Nada Halus Khas Flute)
+      // Vibrato Halus
       const vibrato = audioCtx.createOscillator();
       const vibratoGain = audioCtx.createGain();
-      vibrato.frequency.setValueAtTime(5, startTime); // Kecepatan vibrato 5Hz
-      vibratoGain.gain.setValueAtTime(2.5, startTime); // Kedalaman vibrato
+      vibrato.frequency.setValueAtTime(5, startTime);
+      vibratoGain.gain.setValueAtTime(2.5, startTime);
       vibrato.connect(osc.frequency);
       vibrato.start(startTime);
       vibrato.stop(startTime + dur);
@@ -492,9 +492,10 @@
       osc.type = 'sine';
       osc.frequency.setValueAtTime(freq, startTime);
 
-      // Envelope Tiupan Nafas Seruling (Lembut di Awal & Mengalun)
+      // Envelope Nafas Seruling Lembut (Durasi Disesuaikan)
       gain.gain.setValueAtTime(0.001, startTime);
-      gain.gain.linearRampToValueAtTime(0.25, startTime + 0.12); 
+      gain.gain.linearRampToValueAtTime(0.25, startTime + 0.2); 
+      gain.gain.setValueAtTime(0.25, startTime + dur - 0.3);
       gain.gain.exponentialRampToValueAtTime(0.001, startTime + dur);
 
       osc.connect(gain);
@@ -504,21 +505,24 @@
       osc.stop(startTime + dur);
     }
 
-    /* POLA EAR TRAINING FLUTE (DO - RE - MI, DIAM 3 DETIK, NADA TEBAKAN) */
+    /* POLA FLUTE 2 KETUK (2 DETIK) PER NADA -> DIAM 3 DETIK -> TEBAKAN 2 KETUK */
     function playEarTrainingPattern(targetFreq) {
       initAudioContext();
       if (!audioCtx) return;
       const now = audioCtx.currentTime + 0.1;
 
-      // 1. Bunyikan Flute Do - Re - Mi
-      playFluteTone(0.6, now, FREQ.C5);       // Do
-      playFluteTone(0.6, now + 0.7, FREQ.D5); // Re
-      playFluteTone(0.6, now + 1.4, FREQ.E5); // Mi
+      // Durasi 2 ketuk = 1.9 detik (ditambah jeda antarnada 0.2 detik)
+      const beat2 = 1.9; 
 
-      // 2. Jeda / Diam 3 Detik (Hening dari 2.0s s/d 5.0s)
+      // 1. Bunyikan Flute Do - Re - Mi (Masing-masing 2 ketuk / 2 detik)
+      playFluteTone(beat2, now, FREQ.C5);       // Do  (Detik 0 - 2)
+      playFluteTone(beat2, now + 2.1, FREQ.D5); // Re  (Detik 2.1 - 4.1)
+      playFluteTone(beat2, now + 4.2, FREQ.E5); // Mi  (Detik 4.2 - 6.2)
 
-      // 3. Bunyikan Nada Tebakan Flute setelah jeda 3 detik (detik ke-5.0)
-      playFluteTone(1.4, now + 5.0, targetFreq);
+      // 2. Jeda / Diam 3 Detik (Hening dari Detik 6.3 s/d 9.3)
+
+      // 3. Bunyikan Nada Tebakan Flute 2 ketuk (detik ke-9.3)
+      playFluteTone(beat2, now + 9.3, targetFreq);
     }
 
     function showHeroBoost(isCorrect) {
