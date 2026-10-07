@@ -24,7 +24,7 @@
     .q-counter { font-size: 16px; font-weight: bold; color: #ffe600; }
     .score-badge { background: linear-gradient(135deg, #00f0ff, #ff007f); padding: 8px 18px; border-radius: 20px; font-size: 18px; font-weight: 900; color: #fff; text-shadow: 1px 1px 2px #000; box-shadow: 0 4px 10px rgba(0,0,0,0.5); }
 
-    /* Layout Ubin 3D Game (PAS 10 UBIN) */
+    /* Layout Ubin 3D Game */
     .tiles-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(75px, 1fr)); gap: 15px; padding: 20px; background: #151221; border: 3px solid #7928ca; border-radius: 20px; flex-grow: 1; max-height: calc(100vh - 180px); overflow-y: auto; box-shadow: inset 0 0 20px rgba(0,0,0,0.8); }
     
     .tile-btn { 
@@ -251,7 +251,7 @@
       <strong style="color:#ffe600; display:block; margin-bottom:6px; text-transform:uppercase;">ATURAN KUIS (10 SOAL):</strong>
       <ul>
         <li>📖 <strong>Soal 1-5:</strong> Teori Panduan Teknik Dasar Menyanyi Unisono.</li>
-        <li>🎧 <strong>Soal 6-10:</strong> Ear Training (Dengarkan Do-Re-Mi, jeda 3 detik, lalu tebak nada!).</li>
+        <li>🪈 <strong>Soal 6-10:</strong> Ear Training Flute (Dengarkan Do-Re-Mi, jeda 3 detik, lalu tebak nada!).</li>
         <li>💯 <strong>Sistem Skor:</strong> Tiap soal bernilai 10 poin (Total Maksimal = 100 Poin).</li>
         <li>⏱️ <strong>Waktu Soal:</strong> 2 Menit (120 Detik) per soal.</li>
         <li>🚫 <strong>Anti-Curang:</strong> Dilarang pindah tab/aplikasi saat kuis berlangsung.</li>
@@ -293,7 +293,7 @@
       <div class="question-box" id="question-box">
         <span id="question-text">Memuat soal...</span>
         <button id="audio-play-btn" class="audio-btn" style="display:none;" onclick="playQuestionSound()">
-          🔊 Putar Ulang Audio (Do-Re-Mi ... 3 Detik ... Nada Tebakan)
+          🪈 Putar Ulang Flute (Do-Re-Mi ... 3 Detik ... Nada Tebakan)
         </button>
       </div>
 
@@ -317,7 +317,8 @@
     let audioCtx = null;
     let currentVoiceAudio = null;
 
-    const FREQ = { C4: 261.63, D4: 293.66, E4: 329.63 };
+    // FREKUENSI NADA C5 (OKTAF TINGGI KHAS INSTRUMEN FLUTE)
+    const FREQ = { C5: 523.25, D5: 587.33, E5: 659.25 };
 
     const correctHeroes = [
       { name: "ALUCARD", icon: "⚔️", quote: "MANTAP!" },
@@ -391,40 +392,42 @@
         correctText: "Menimbulkan persaingan antar penyanyi solo",
         isAudio: false 
       },
+
+      /* 5 SOAL EAR TRAINING DENGAN SUARA FLUTE */
       {
-        q: "6. Ear Training 1:\nDengarkan nada patokan Do-Re-Mi, lalu diam 3 detik. Nada apakah yang berbunyi setelah jeda 3 detik tersebut?",
+        q: "6. Ear Training Flute 1:\nDengarkan nada flute Do-Re-Mi, lalu diam 3 detik. Nada apakah yang berbunyi setelah jeda 3 detik tersebut?",
         options: ["Nada Do (C)", "Nada Re (D)", "Nada Mi (E)"],
         correctText: "Nada Do (C)",
         isAudio: true,
-        targetFreq: FREQ.C4
+        targetFreq: FREQ.C5
       },
       {
-        q: "7. Ear Training 2:\nDengarkan nada patokan Do-Re-Mi, lalu diam 3 detik. Nada apakah yang berbunyi setelah jeda 3 detik tersebut?",
+        q: "7. Ear Training Flute 2:\nDengarkan nada flute Do-Re-Mi, lalu diam 3 detik. Nada apakah yang berbunyi setelah jeda 3 detik tersebut?",
         options: ["Nada Do (C)", "Nada Re (D)", "Nada Mi (E)"],
         correctText: "Nada Re (D)",
         isAudio: true,
-        targetFreq: FREQ.D4
+        targetFreq: FREQ.D5
       },
       {
-        q: "8. Ear Training 3:\nDengarkan nada patokan Do-Re-Mi, lalu diam 3 detik. Nada apakah yang berbunyi setelah jeda 3 detik tersebut?",
+        q: "8. Ear Training Flute 3:\nDengarkan nada flute Do-Re-Mi, lalu diam 3 detik. Nada apakah yang berbunyi setelah jeda 3 detik tersebut?",
         options: ["Nada Do (C)", "Nada Re (D)", "Nada Mi (E)"],
         correctText: "Nada Mi (E)",
         isAudio: true,
-        targetFreq: FREQ.E4
+        targetFreq: FREQ.E5
       },
       {
-        q: "9. Ear Training 4:\nDengarkan nada patokan Do-Re-Mi, lalu diam 3 detik. Tebaklah nada tunggal yang dibunyikan di akhir!",
+        q: "9. Ear Training Flute 4:\nDengarkan nada flute Do-Re-Mi, lalu diam 3 detik. Tebaklah nada tunggal yang dibunyikan di akhir!",
         options: ["Nada Do (C)", "Nada Re (D)", "Nada Mi (E)"],
         correctText: "Nada Do (C)",
         isAudio: true,
-        targetFreq: FREQ.C4
+        targetFreq: FREQ.C5
       },
       {
-        q: "10. Ear Training 5:\nDengarkan nada patokan Do-Re-Mi, lalu diam 3 detik. Tebaklah nada tunggal yang dibunyikan di akhir!",
+        q: "10. Ear Training Flute 5:\nDengarkan nada flute Do-Re-Mi, lalu diam 3 detik. Tebaklah nada tunggal yang dibunyikan di akhir!",
         options: ["Nada Do (C)", "Nada Re (D)", "Nada Mi (E)"],
         correctText: "Nada Mi (E)",
         isAudio: true,
-        targetFreq: FREQ.E4
+        targetFreq: FREQ.E5
       }
     ];
 
@@ -434,8 +437,6 @@
     var correctAnswersCount = 0;
     var answeredCount = 0;
     var timerInterval = null;
-    
-    /* WAKTU DIBUAT 2 MENIT (120 DETIK) PER SOAL */
     var QUESTION_TIME = 120;
     var timeLeft = QUESTION_TIME;
     var cheatCount = 0;
@@ -472,32 +473,52 @@
       }
     }
 
+    /* SINTESIS FLUTE (SINE WAVE + BREATH ENVELOPE + VIBRATO HARMONIK) */
+    function playFluteTone(dur, startTime, freq) {
+      if (!audioCtx) return;
+
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+
+      // Vibrato (Pembelokan Nada Halus Khas Flute)
+      const vibrato = audioCtx.createOscillator();
+      const vibratoGain = audioCtx.createGain();
+      vibrato.frequency.setValueAtTime(5, startTime); // Kecepatan vibrato 5Hz
+      vibratoGain.gain.setValueAtTime(2.5, startTime); // Kedalaman vibrato
+      vibrato.connect(osc.frequency);
+      vibrato.start(startTime);
+      vibrato.stop(startTime + dur);
+
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(freq, startTime);
+
+      // Envelope Tiupan Nafas Seruling (Lembut di Awal & Mengalun)
+      gain.gain.setValueAtTime(0.001, startTime);
+      gain.gain.linearRampToValueAtTime(0.25, startTime + 0.12); 
+      gain.gain.exponentialRampToValueAtTime(0.001, startTime + dur);
+
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+
+      osc.start(startTime);
+      osc.stop(startTime + dur);
+    }
+
+    /* POLA EAR TRAINING FLUTE (DO - RE - MI, DIAM 3 DETIK, NADA TEBAKAN) */
     function playEarTrainingPattern(targetFreq) {
       initAudioContext();
       if (!audioCtx) return;
       const now = audioCtx.currentTime + 0.1;
 
-      playTone(0.5, now, 'sine', FREQ.C4);       // Do
-      playTone(0.5, now + 0.6, 'sine', FREQ.D4); // Re
-      playTone(0.5, now + 1.2, 'sine', FREQ.E4); // Mi
+      // 1. Bunyikan Flute Do - Re - Mi
+      playFluteTone(0.6, now, FREQ.C5);       // Do
+      playFluteTone(0.6, now + 0.7, FREQ.D5); // Re
+      playFluteTone(0.6, now + 1.4, FREQ.E5); // Mi
 
-      playTone(1.2, now + 4.8, 'sine', targetFreq); // Tebakan setelah 3 detik
-    }
+      // 2. Jeda / Diam 3 Detik (Hening dari 2.0s s/d 5.0s)
 
-    function playTone(dur, startTime, inst = 'sine', freq = 261.63) {
-      if (!audioCtx) return;
-      const osc = audioCtx.createOscillator();
-      const gain = audioCtx.createGain();
-
-      osc.type = inst;
-      osc.frequency.setValueAtTime(freq, startTime);
-      gain.gain.setValueAtTime(0.3, startTime);
-      gain.gain.linearRampToValueAtTime(0.001, startTime + dur);
-
-      osc.connect(gain);
-      gain.connect(audioCtx.destination);
-      osc.start(startTime);
-      osc.stop(startTime + dur);
+      // 3. Bunyikan Nada Tebakan Flute setelah jeda 3 detik (detik ke-5.0)
+      playFluteTone(1.4, now + 5.0, targetFreq);
     }
 
     function showHeroBoost(isCorrect) {
@@ -651,7 +672,7 @@
 
       var qData = selectedQuestions[currentQIndex];
       document.getElementById("question-text").innerText = qData.q;
-      document.getElementById("modal-title").innerText = qData.isAudio ? "Soal Ear Training" : "Soal Teori Unisono";
+      document.getElementById("modal-title").innerText = qData.isAudio ? "Soal Ear Training Flute" : "Soal Teori Unisono";
 
       var audioBtn = document.getElementById("audio-play-btn");
       if (qData.isAudio) {
