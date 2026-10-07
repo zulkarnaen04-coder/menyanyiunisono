@@ -401,23 +401,26 @@
       if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
     }
 
+    /* PENGAMANDAN SUARA TTS TANPA STUCK GAMING */
     function playNaturalVoice(text, onEndCallback) {
       if (currentVoiceAudio) {
         currentVoiceAudio.pause();
         currentVoiceAudio = null;
       }
-      const soundUrl = `https://translate.google.com/translate_tts?ie=UTF-8&q=${encodeURIComponent(text)}&tl=id&client=tw-ob`;
-      currentVoiceAudio = new Audio(soundUrl);
-      if (onEndCallback) currentVoiceAudio.onended = onEndCallback;
-      currentVoiceAudio.play().catch(function(err) {
-        if ('speechSynthesis' in window) {
-          window.speechSynthesis.cancel();
-          const utterance = new SpeechSynthesisUtterance(text);
-          utterance.lang = 'id-ID';
-          if (onEndCallback) utterance.onend = onEndCallback;
-          window.speechSynthesis.speak(utterance);
+      try {
+        const soundUrl = `https://translate.google.com/translate_tts?ie=UTF-8&q=${encodeURIComponent(text)}&tl=id&client=tw-ob`;
+        currentVoiceAudio = new Audio(soundUrl);
+        if (onEndCallback) currentVoiceAudio.onended = onEndCallback;
+        
+        let playPromise = currentVoiceAudio.play();
+        if (playPromise !== undefined) {
+          playPromise.catch(function() {
+            if (onEndCallback) onEndCallback();
+          });
         }
-      });
+      } catch (e) {
+        if (onEndCallback) onEndCallback();
+      }
     }
 
     function showHeroBoost(isCorrect) {
@@ -481,6 +484,7 @@
       return arr;
     }
 
+    /* SISTEM START GAME SANGAT CEPAT BERJALAN */
     function validateAndStart() {
       var nameInput = document.getElementById("student-name").value.trim();
       var classInput = document.getElementById("student-class").value.trim();
@@ -492,10 +496,12 @@
       studentClass = classInput;
       document.getElementById("display-student-info").innerText = "Siswa: " + studentName + " | Kelas: " + studentClass;
       initAudioContext();
-      playNaturalVoice("Selamat datang di Zulkarnaen Kuis Musik SMP! Selamat bermain!", function() { startQuiz(); });
-      setTimeout(function() {
-        if (document.getElementById("start-screen").style.display !== "none") startQuiz();
-      }, 3500);
+      
+      // Langsung jalankan kuis tanpa tertahan audio!
+      startQuiz();
+      
+      // Suara pembuka tetap dimainkan di background
+      playNaturalVoice("Selamat datang di Zulkarnaen Kuis Musik SMP! Selamat bermain!");
     }
 
     document.addEventListener("visibilitychange", function() {
@@ -686,11 +692,8 @@
       document.getElementById("finish-btn").style.display = "inline-block";
     }
 
-    // FUNGSI PENGIRIMAN DATA FORM LAMA (BEBAS BLOKIR CORS)
     function sendDataToGoogleSheets() {
       var finalScore = correctAnswersCount * 20;
-      
-      // Menggunakan URLSearchParams agar terbaca sebagai Form Data oleh Google Apps Script
       var formData = new URLSearchParams();
       formData.append("timestamp", new Date().toLocaleString("id-ID"));
       formData.append("nama", studentName);
@@ -706,11 +709,7 @@
           mode: "no-cors",
           headers: { "Content-Type": "application/x-www-form-urlencoded" },
           body: formData.toString()
-        }).then(function() {
-          console.log("Data berhasil terkirim ke Google Sheets.");
-        }).catch(function(err) { 
-          console.error("Gagal mengirim data:", err); 
-        });
+        }).catch(function(err) { console.error("Gagal mengirim data:", err); });
       }
     }
 
@@ -725,4 +724,23 @@
         playNaturalVoice("Tetap semangat ya! Ayo pelajari lagi panduan teknik dasar menyanyi unisono!");
       }
 
-      document
+      document.body.innerHTML = `
+        <div style="min-height:100vh; display:flex; flex-direction:column; justify-content:center; align-items:center; background:#0f0c1b; color:#fff; text-align:center; padding:20px;">
+          <h1 style="color:#ffe600; font-size:30px; margin-bottom:15px; text-transform:uppercase; text-shadow:0 0 10px #ffe600;">GAME OVER! 🏆</h1>
+          <p style="color:#00f0ff; font-size:15px; margin-bottom:20px;">Data nilai kuis telah berhasil terdata di sistem Google Sheets.</p>
+          <div style="background:#1a162b; border:3px solid #ff007f; padding:20px; border-radius:20px; width:100%; max-width:350px; margin-bottom:20px; text-align:left; box-shadow:0 0 20px rgba(255,0,127,0.3);">
+            <p style="font-size:15px; margin-bottom:8px; color:#00f0ff;">Nama: <strong>${studentName}</strong></p>
+            <p style="font-size:15px; margin-bottom:15px; color:#00f0ff;">Kelas: <strong>${studentClass}</strong></p>
+            <hr style="border:0; border-top:1px solid #7928ca; margin-bottom:15px;">
+            <p style="font-size:16px; margin-bottom:10px;">Soal Terjawab: <strong>${answeredCount} / 5 Soal</strong></p>
+            <p style="font-size:16px; margin-bottom:10px;">Jawaban Benar: <strong style="color:#10b981;">${correctAnswersCount} Soal</strong></p>
+            <p style="font-size:16px; margin-bottom:10px;">Pelanggaran Curang: <strong style="color:${cheatCount > 0 ? '#ef4444' : '#10b981'};">${cheatCount} Kali</strong></p>
+            <p style="font-size:26px; font-weight:900; color:#ffe600; margin-top:10px; text-shadow:0 0 10px #ffe600;">NILAI AKHIR: ${finalScore}</p>
+          </div>
+          <button onclick="location.reload()" style="background:linear-gradient(135deg, #00f0ff, #7928ca); color:#fff; font-size:18px; font-weight:bold; padding:14px 35px; border:2px solid #fff; border-radius:30px; cursor:pointer; box-shadow:0 0 15px rgba(0,240,255,0.5);">MAIN LAGI 🔄</button>
+        </div>
+      `;
+    }
+  </script>
+</body>
+</html>
