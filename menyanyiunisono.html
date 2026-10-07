@@ -253,7 +253,7 @@
         <li>📖 <strong>Soal 1-5:</strong> Teori Panduan Teknik Dasar Menyanyi Unisono.</li>
         <li>🎧 <strong>Soal 6-10:</strong> Ear Training (Dengarkan Do-Re-Mi, jeda 3 detik, lalu tebak nada!).</li>
         <li>💯 <strong>Sistem Skor:</strong> Tiap soal bernilai 10 poin (Total Maksimal = 100 Poin).</li>
-        <li>⏱️ <strong>Waktu Soal:</strong> 1 Menit (60 Detik) per soal.</li>
+        <li>⏱️ <strong>Waktu Soal:</strong> 2 Menit (120 Detik) per soal.</li>
         <li>🚫 <strong>Anti-Curang:</strong> Dilarang pindah tab/aplikasi saat kuis berlangsung.</li>
       </ul>
     </div>
@@ -287,7 +287,7 @@
 
       <div class="timer-container">
         <div class="timer-bar" id="timer-bar"></div>
-        <div class="timer-text" id="timer-text">01:00</div>
+        <div class="timer-text" id="timer-text">02:00</div>
       </div>
 
       <div class="question-box" id="question-box">
@@ -335,7 +335,6 @@
       { name: "NANA", icon: "🐱", quote: "BISA YUK!" }
     ];
 
-    // 10 SOAL KUIS (5 SOAL TEORI UNISONO + 5 SOAL EAR TRAINING DO-RE-MI PAUSE 3 DETIK)
     var selectedQuestions = [
       { 
         q: "1. Pengertian Menyanyi Unisono:\nApa yang dimaksud dengan bernyanyi secara Unisono berdasarkan panduan?", 
@@ -392,8 +391,6 @@
         correctText: "Menimbulkan persaingan antar penyanyi solo",
         isAudio: false 
       },
-
-      /* 5 SOAL EAR TRAINING BARU (DO - RE - MI, DIAM 3 DETIK, BUNYI NADA TEBAKAN) */
       {
         q: "6. Ear Training 1:\nDengarkan nada patokan Do-Re-Mi, lalu diam 3 detik. Nada apakah yang berbunyi setelah jeda 3 detik tersebut?",
         options: ["Nada Do (C)", "Nada Re (D)", "Nada Mi (E)"],
@@ -437,7 +434,9 @@
     var correctAnswersCount = 0;
     var answeredCount = 0;
     var timerInterval = null;
-    var QUESTION_TIME = 60;
+    
+    /* WAKTU DIBUAT 2 MENIT (120 DETIK) PER SOAL */
+    var QUESTION_TIME = 120;
     var timeLeft = QUESTION_TIME;
     var cheatCount = 0;
     var MAX_CHEATS = 3;
@@ -473,21 +472,16 @@
       }
     }
 
-    /* MEMAINKAN AUDIO DO-RE-MI -> DIAM 3 DETIK -> BUNYI NADA TEBAKAN */
     function playEarTrainingPattern(targetFreq) {
       initAudioContext();
       if (!audioCtx) return;
       const now = audioCtx.currentTime + 0.1;
 
-      // 1. Bunyikan Do - Re - Mi (masing-masing 0.6 detik)
       playTone(0.5, now, 'sine', FREQ.C4);       // Do
       playTone(0.5, now + 0.6, 'sine', FREQ.D4); // Re
       playTone(0.5, now + 1.2, 'sine', FREQ.E4); // Mi
 
-      // 2. Jeda / Diam 3 Detik (Audio Hening dari 1.8 detik s/d 4.8 detik)
-      
-      // 3. Bunyikan Nada Tebakan setelah jeda 3 detik (pada detik ke-4.8)
-      playTone(1.2, now + 4.8, 'sine', targetFreq);
+      playTone(1.2, now + 4.8, 'sine', targetFreq); // Tebakan setelah 3 detik
     }
 
     function playTone(dur, startTime, inst = 'sine', freq = 261.63) {
@@ -717,9 +711,9 @@
       var bar = document.getElementById("timer-bar");
       bar.style.width = percentage + "%";
 
-      if (timeLeft <= 10) {
+      if (timeLeft <= 20) {
         bar.style.background = "#ef4444";
-      } else if (timeLeft <= 30) {
+      } else if (timeLeft <= 60) {
         bar.style.background = "#ffe600";
       } else {
         bar.style.background = "linear-gradient(90deg, #00f0ff, #ff007f)";
@@ -780,7 +774,7 @@
     }
 
     function updateOverallProgress() {
-      var calculatedScore = correctAnswersCount * 10; // SKOR 10 POIN PER SOAL (TOTAL 100)
+      var calculatedScore = correctAnswersCount * 10;
       document.getElementById("q-counter").innerText = `Terjawab: ${answeredCount} / 10 Soal`;
       document.getElementById("score-badge").innerText = "SKOR: " + calculatedScore;
       document.getElementById("finish-btn").style.display = "inline-block";
